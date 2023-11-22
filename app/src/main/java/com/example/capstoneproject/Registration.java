@@ -81,19 +81,28 @@ public class Registration extends AppCompatActivity {
                                 //Username already exist
                                 if (snapshot.child(usernameText.getText().toString()).exists()) {
                                     Toast.makeText(Registration.this, "Username already exist!", Toast.LENGTH_SHORT).show();
-
                                 }
-                                else if (passwordText.getText().toString().length()  < 8 || retypePasswordText.getText().toString().length() < 8){
-                                    Toast.makeText(Registration.this, "Password must have at least 8 characters!", Toast.LENGTH_SHORT).show();
+                                else if (passwordText.getText().toString().length() < 8) {
+                                    Toast.makeText(Registration.this, "Password must be at least 8 characters!", Toast.LENGTH_SHORT).show();
                                 }
-                                else if(!passwordText.getText().toString().matches( "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,15}$") || !retypePasswordText.getText().toString().matches( "^(?=.*[0-9])(?=.*[a-z])(?=.*[!@#$%^&*+=?-]).{8,15}$")){
+                                else if (!passwordText.getText().toString().matches(".*[a-zA-Z].*") || !retypePasswordText.getText().toString().matches(".*[a-zA-Z].*")) {
+                                    Toast.makeText(Registration.this, "Password must contain at least 1 letter!", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (!passwordText.getText().toString().matches(".*\\d.*") || !retypePasswordText.getText().toString().matches(".*\\d.*")) {
+                                    Toast.makeText(Registration.this, "Password must contain at least 1 number!", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (!passwordText.getText().toString().matches(".*[!@#$%^&*+=?-].*") || !retypePasswordText.getText().toString().matches(".*[!@#$%^&*+=?-].*")) {
                                     Toast.makeText(Registration.this, "Password must contain at least 1 special character!", Toast.LENGTH_SHORT).show();
                                 }
-                                else{
+                                else if (!telNoText.getText().toString().matches("^[0-9]{10,13}$")) {
+                                    Toast.makeText(Registration.this, "Invalid phone number format!", Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    // Your existing code for successful registration
                                     Customer customer = new Customer(nameText.getText().toString(), encryptedPassword, telNoText.getText().toString());
                                     customerTable.child(usernameText.getText().toString()).setValue(customer);
                                     Toast.makeText(Registration.this, "Registration successful! ", Toast.LENGTH_SHORT).show();
-                                    finish(); //close activity
+                                    finish(); // close activity
                                 }
 
                             }

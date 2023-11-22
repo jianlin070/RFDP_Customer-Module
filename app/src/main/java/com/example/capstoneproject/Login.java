@@ -55,49 +55,53 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            encryptedPassword = EncryptDecrypt.encrypt(passwordText.getText().toString());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                // Check if username and password are not empty
+                if (usernameText.getText().toString().isEmpty() || passwordText.getText().toString().isEmpty()) {
+                    Toast.makeText(Login.this, "Please fill in both username and password", Toast.LENGTH_SHORT).show();
+                    return;  // Exit the method if either field is empty
+                }
 
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        encryptedPassword = EncryptDecrypt.encrypt(passwordText.getText().toString());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
                 customerTable.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                            //Check whether or not username is exist in database
-                            if (snapshot.child(usernameText.getText().toString()).exists()) {
+                        // Check whether or not username is exist in database
+                        if (snapshot.child(usernameText.getText().toString()).exists()) {
 
-                                //Get customer information
-                                Customer customer = snapshot.child(usernameText.getText().toString()).getValue(Customer.class);
-                                customer.setCustID(usernameText.getText().toString());
+                            // Get customer information
+                            Customer customer = snapshot.child(usernameText.getText().toString()).getValue(Customer.class);
+                            customer.setCustID(usernameText.getText().toString());
 
-                                if (customer.getCustPassword().equals(encryptedPassword)){
-                                    Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                                    Intent orderTypeIntent = new Intent(Login.this, OrderType.class);
-                                    Common.currentUser = customer;
-                                    startActivity(orderTypeIntent);
-                                    finish();
-
-                                }else {
-                                    Toast.makeText(Login.this, "Password incorrect! Please try again!", Toast.LENGTH_SHORT).show();
-                                }
+                            if (customer.getCustPassword().equals(encryptedPassword)){
+                                Toast.makeText(Login.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                                Intent orderTypeIntent = new Intent(Login.this, OrderType.class);
+                                Common.currentUser = customer;
+                                startActivity(orderTypeIntent);
+                                finish();
 
                             } else {
-
-                                Toast.makeText(Login.this, "User does not exist!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Login.this, "Password incorrect! Please try again!", Toast.LENGTH_SHORT).show();
                             }
 
+                        } else {
+                            Toast.makeText(Login.this, "User does not exist!", Toast.LENGTH_SHORT).show();
                         }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
+                    }
 
-                        }
-                 });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
     }

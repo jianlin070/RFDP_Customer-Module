@@ -109,12 +109,14 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="•Password must be at least 8 characters\n•Password must have at least 1 special character"
+            android:text="•Password must be at least 8 characters\n•Password must contain at least 1 letter\n•Password must contain at least 1 number\n•Password must contain at least 1 special character"
             android:textColor="#808080"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
